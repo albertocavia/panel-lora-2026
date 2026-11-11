@@ -70,6 +70,18 @@
   .badge:hover,.badge:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
   .empty td{text-align:center;font-size:22px;text-transform:none;color:#555}
   .col-t{width:11%}.col-d{width:33%}.col-tr{width:15%}.col-n{width:10%}.col-v{width:8%}.col-o{width:23%}
+  /* "Todo" tab: extra movement column before the time */
+  table.todo .col-m{width:12%}table.todo .col-t{width:9%}table.todo .col-d{width:27%}table.todo .col-tr{width:14%}table.todo .col-n{width:9%}table.todo .col-v{width:7%}table.todo .col-o{width:22%}
+  td.mov{font-size:clamp(13px,1.6vw,20px);text-align:center;color:var(--head-txt);letter-spacing:.3px}
+  tr.paso td.mov{color:#5b6656}
+  /* "Horario completo": next train to happen, 2px red frame (inset so it never clashes with the row lines) */
+  tr.next td{box-shadow:inset 0 2px 0 #e00000,inset 0 -2px 0 #e00000}
+  tr.next td:first-child{box-shadow:inset 0 2px 0 #e00000,inset 0 -2px 0 #e00000,inset 2px 0 0 #e00000}
+  tr.next td:last-child{box-shadow:inset 0 2px 0 #e00000,inset 0 -2px 0 #e00000,inset -2px 0 0 #e00000}
+  .btn.toggle{background:#fff;color:var(--navy-2);display:inline-flex;align-items:center;gap:8px}
+  .btn.toggle::before{content:"";width:12px;height:12px;border-radius:50%;border:2px solid var(--navy);background:#fff}
+  .btn.toggle[aria-pressed="true"]{background:var(--time-bg);border-color:var(--time-bg);color:#fff}
+  .btn.toggle[aria-pressed="true"]::before{background:#fff;border-color:#fff}
 
   .foot{color:#cfcfcf;font-size:14px;padding:12px 4px 0;line-height:1.45}
   .foot b{color:#fff}
@@ -117,7 +129,13 @@
     .logo img{height:56px}
     select{min-width:0;flex:1}
     .col-o,td.obs,th.obs{display:none}
-    .col-d{width:40%}.col-tr{width:22%}.col-n{width:14%}.col-v{width:12%}.col-t{width:16%}
+    .col-t{width:22%}.col-d{width:32%}.col-tr{width:20%}.col-n{width:14%}.col-v{width:12%}
+    thead th{font-size:14px;padding:8px 3px}tbody td.t{font-size:20px;padding:0 2px}
+    table.todo .col-m{width:18%}table.todo .col-t{width:17%}table.todo .col-d{width:21%}table.todo .col-tr{width:17%}table.todo .col-n{width:12%}table.todo .col-v{width:15%}
+    table.todo th{font-size:12px;padding:8px 3px}table.todo td{padding:0 3px}table.todo td.t{font-size:19px}table.todo td.mov{font-size:11px;white-space:normal;line-height:1}table.todo td.num{font-size:17px}
+    .tabs{flex-wrap:wrap;gap:2px 8px}
+    .title{gap:8px;padding:6px 10px}
+    .tab-sub{font-size:13px;padding-left:8px}
     tbody td{height:52px;padding:0 6px}
     .badge{height:34px}
     .card .col-ip{display:none}
@@ -145,6 +163,7 @@
             <button class="tab" role="tab" data-mode="sal" aria-selected="true">Salidas</button>
             <button class="tab" role="tab" data-mode="lle" aria-selected="false">Llegadas</button>
             <button class="tab" role="tab" data-mode="pas" aria-selected="false">Pasos</button>
+            <button class="tab" role="tab" data-mode="todo" aria-selected="false">Todo</button>
           </div>
           <span class="tab-sub" id="tab-sub">Próximas salidas</span>
           <span class="clock-src" id="clock-src" hidden></span>
@@ -154,21 +173,20 @@
           <select id="station"></select>
           <input type="time" id="manual" title="Hora simulada (vacío = hora real)">
           <button class="btn" id="now" type="button">Ahora</button>
+          <button class="btn toggle" id="full" type="button" aria-pressed="false" title="Muestra la lista desde el inicio de la hora en curso y marca el siguiente tren">Horario completo</button>
         </div>
         <div class="logo" id="logo" hidden></div>
       </div>
       <table>
-        <colgroup><col class="col-t"><col class="col-d"><col class="col-tr"><col class="col-n"><col class="col-v"><col class="col-o"></colgroup>
-        <thead><tr>
-          <th>Hora</th><th id="h-dest">Destino</th><th>Tren</th><th>Número</th><th>Vía</th><th class="obs">Observaciones</th>
-        </tr></thead>
+        <colgroup id="cols"></colgroup>
+        <thead><tr id="head"></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
   </div>
 
   <div class="foot">
-    Malla <b id="foot-name"></b>: ciclo de <span id="foot-cycle"></span> minutos que se repite cada hora. El panel muestra el ciclo completo ordenado a partir de la hora actual (o de la hora simulada). Pulsa en un tren para ver su itinerario.
+    Malla <b id="foot-name"></b>: ciclo de <span id="foot-cycle"></span> minutos que se repite cada hora. El panel muestra el ciclo completo ordenado a partir de la hora actual (o de la hora simulada); con «Horario completo» la lista empieza al principio de la hora en curso y el siguiente tren aparece enmarcado en rojo. Pulsa en un tren para ver su itinerario.
     <details>
       <summary>Leyenda de trenes</summary>
       <div class="legend" id="legend"></div>
@@ -225,14 +243,16 @@ function neighbours(t, i){
 }
 
 function buildEvents(){
-  const ev = {}; STATIONS.forEach(s => ev[s] = {sal: [], lle: [], pas: []});
+  const ev = {}; STATIONS.forEach(s => ev[s] = {sal: [], lle: [], pas: [], todo: []});
   for (const t of DATA.trenes){
     t.eventos.forEach((e, i) => {
       if (!ev[e.estacion]) return;
       const {after, before} = neighbours(t, i);
       const next = after[0], prev = before[0];
       if (e.tipo === "paso"){
-        ev[e.estacion].pas.push({min: e.arr, train: t, idx: i, place: `${prev ? prev.estacion : ""} → ${next ? next.estacion : ""}`, obs: "Sin parada"});
+        const p = {min: e.arr, train: t, idx: i, place: `${prev ? prev.estacion : ""} → ${next ? next.estacion : ""}`, obs: "Sin parada"};
+        ev[e.estacion].pas.push(p);
+        ev[e.estacion].todo.push({...p, mov: "Sin parada", ord: 1});
         return;
       }
       const dest = next && next.estacion === e.estacion ? "Bucle → " + e.estacion : (next ? next.estacion : "");
@@ -243,8 +263,14 @@ function buildEvents(){
         if (x.estacion !== (next && next.estacion) && x.estacion !== cont[cont.length - 1]) cont.push(x.estacion);
       }
       const d = dwell(e);
-      ev[e.estacion].sal.push({min: e.dep, train: t, idx: i, place: dest, via: e.via, obs: cont.length ? "Continúa: " + cont.join(" · ") : ""});
-      ev[e.estacion].lle.push({min: e.arr, train: t, idx: i, place: orig, via: e.via, obs: d ? `Estaciona ${d} min` : "Parada breve"});
+      const sal = {min: e.dep, train: t, idx: i, place: dest, via: e.via, obs: cont.length ? "Continúa: " + cont.join(" · ") : ""};
+      const lle = {min: e.arr, train: t, idx: i, place: orig, via: e.via, obs: d ? `Estaciona ${d} min` : "Parada breve"};
+      ev[e.estacion].sal.push(sal);
+      ev[e.estacion].lle.push(lle);
+      // "Todo": a stop is an arrival row and a departure row; a brief stop
+      // (arrival = departure) is a single "Salida" row so it is not listed twice.
+      if (d) ev[e.estacion].todo.push({...lle, mov: "Llegada", ord: 0});
+      ev[e.estacion].todo.push({...sal, mov: "Salida", ord: 1, obs: d ? sal.obs : ["Parada breve", sal.obs].filter(Boolean).join(" · ")});
     });
   }
   return ev;
@@ -278,31 +304,73 @@ const LABELS = {
   sal: {sub: "Próximas salidas", place: "Destino", none: "No hay salidas en esta estación."},
   lle: {sub: "Próximas llegadas", place: "Procedencia", none: "No hay llegadas en esta estación."},
   pas: {sub: "Trenes sin parada", place: "Recorrido", none: "Ningún tren pasa sin parar por esta estación."},
+  todo: {sub: "Todos los movimientos", place: "Procedencia / destino", none: "No hay movimientos en esta estación."},
 };
+
+// "Horario completo" mode: list starts at hh:00 of the current hour and the
+// next movement (first row with time >= now) is framed in red.
+const FULL_KEY = KEY + "-completo";
+let full = false;
+const CYCLIC = CYCLE < 1440;
+const mod = (a, n) => ((a % n) + n) % n;
+function setFull(on, save = true){
+  full = on;
+  $("full").setAttribute("aria-pressed", on);
+  if (save) { try { localStorage.setItem(FULL_KEY, on ? "1" : "0"); } catch (e) {} }
+  lastNextKey = null;
+  render();
+}
+// Absolute minutes of every occurrence of a cycle minute inside the list window.
+function occurrences(min, now){
+  if (!full) return [nextAt(min, now)];
+  const start = Math.floor(now / 60) * 60;
+  if (!CYCLIC) return min >= start ? [min] : [];          // single-day timetable: hh:00 to the end
+  const out = [];
+  for (let at = start + mod(min - start, CYCLE); at < start + Math.max(60, CYCLE); at += CYCLE) out.push(at);
+  return out;
+}
+let lastNextKey = null;
+
+function buildHead(){
+  const todo = mode === "todo";
+  $("cols").innerHTML = (todo ? '<col class="col-m">' : "") + '<col class="col-t"><col class="col-d"><col class="col-tr"><col class="col-n"><col class="col-v"><col class="col-o">';
+  $("head").innerHTML = (todo ? "<th>Movimiento</th>" : "") + `<th>Hora</th><th>${LABELS[mode].place}</th><th>Tren</th><th>Número</th><th>Vía</th><th class="obs">Observaciones</th>`;
+  document.querySelector(".screen > table").classList.toggle("todo", todo);
+}
 
 function render(){
   const now = nowMin();
   $("clock").innerHTML = fmt(now).replace(":", '<span class="sep">:</span>');
   const list = EVENTS[sel.value][mode]
-    .map(e => ({...e, at: nextAt(e.min, now)}))
-    .sort((a, b) => a.at - b.at || a.train.numero - b.train.numero);
+    .flatMap(e => occurrences(e.min, now).map(at => ({...e, at})))
+    .sort((a, b) => a.at - b.at || (a.ord || 0) - (b.ord || 0) || a.train.numero - b.train.numero);
+  const todo = mode === "todo", cols = todo ? 7 : 6;
   const tb = $("rows");
-  if (!list.length){ tb.innerHTML = `<tr class="empty"><td colspan="6">${LABELS[mode].none}</td></tr>`; return; }
-  tb.innerHTML = list.map(e => `<tr class="${mode === "pas" ? "paso" : ""}">
-      <td class="t">${fmt(e.at)}</td>
+  if (!list.length){ tb.innerHTML = `<tr class="empty"><td colspan="${cols}">${LABELS[mode].none}</td></tr>`; return; }
+  const nextIdx = full ? list.findIndex(e => e.at >= now) : -1;
+  tb.innerHTML = list.map((e, i) => `<tr class="${(mode === "pas" || e.mov === "Sin parada") ? "paso" : ""}${i === nextIdx ? " next" : ""}">
+      ${todo ? `<td class="mov">${e.mov}</td>` : ""}<td class="t">${fmt(e.at)}</td>
       <td>${e.place}</td>
       <td>${badge(e.train)}</td>
       <td class="num">${e.train.numero}</td>
       <td class="via">${e.via ?? ""}</td>
       <td class="obs">${e.obs}</td>
     </tr>`).join("");
+  // Bring the framed row into view only when it changes (at most once per minute).
+  const key = nextIdx < 0 ? null : `${sel.value}|${mode}|${list[nextIdx].at}|${list[nextIdx].train.numero}|${list[nextIdx].mov || ""}`;
+  if (key && key !== lastNextKey){
+    const row = tb.querySelector("tr.next");
+    if (row) row.scrollIntoView({block: "nearest"});
+  }
+  lastNextKey = key;
 }
 
 function setMode(m){
   mode = m;
   document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.mode === m));
   $("tab-sub").textContent = LABELS[m].sub;
-  $("h-dest").textContent = LABELS[m].place;
+  buildHead();
+  lastNextKey = null;
   render();
 }
 
@@ -359,6 +427,7 @@ document.querySelectorAll(".tab").forEach(b => b.onclick = () => setMode(b.datas
 sel.onchange = () => { try { localStorage.setItem(KEY, sel.value); } catch (e) {} render(); };
 $("manual").oninput = render;
 $("now").onclick = () => { $("manual").value = ""; render(); };
+$("full").onclick = () => setFull(!full);
 $("foot-name").textContent = DATA.encuentro;
 $("foot-cycle").textContent = CYCLE;
 if (DATA.logo){ $("logo").hidden = false; $("logo").innerHTML = `<img src="${DATA.logo}" alt="Logo del encuentro">`; }
@@ -366,11 +435,16 @@ $("legend").innerHTML = DATA.trenes.map(t =>
   `<button type="button" data-train="${t.numero}"><span class="sw" style="background:${t.color};color:${textOn(t.color)}">${t.numero}</span><b>${t.tipo}</b> <span>${t.recorrido}${t.vmax ? " · " + t.vmax + " km/h" : ""}${t.long_max_mm ? " · " + t.long_max_mm + " mm" : ""}</span></button>`
 ).join("");
 
-// Optional URL parameters: ?est=Dos%20Hermanas&vista=lle&hora=09:30&tren=52
+// Optional URL parameters: ?est=Dos%20Hermanas&vista=lle&hora=09:30&tren=52&modo=completo
 const q = new URLSearchParams(location.search);
 if (STATIONS.includes(q.get("est"))) sel.value = q.get("est");
 if (/^\d\d:\d\d$/.test(q.get("hora") || "")) $("manual").value = q.get("hora");
-setMode(["sal", "lle", "pas"].includes(q.get("vista")) ? q.get("vista") : "sal");
+// Horario completo: the URL wins over the choice saved on this device.
+try { full = localStorage.getItem(FULL_KEY) === "1"; } catch (e) {}
+if (q.get("modo") === "completo") full = true;
+else if (q.get("modo") === "normal") full = false;
+$("full").setAttribute("aria-pressed", full);
+setMode(["sal", "lle", "pas", "todo"].includes(q.get("vista")) ? q.get("vista") : "sal");
 if (q.get("tren")) openItinerary(Number(q.get("tren")));
 // Redraw when the shown minute changes (fast clocks move several minutes per
 // real minute); the clock digits refresh every half second.
