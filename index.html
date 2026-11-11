@@ -297,10 +297,12 @@ function stationRows(station){
   const at = m => cyclic ? mod(m, CYCLE) : m;
   const rows = [];   // [sort minute, order within the minute, row]
   const add = (min, ord, t, via, action, place) => rows.push([at(min), ord, [at(min), {v: t.numero, color: t.color}, via ?? "", t.tipo, "", action, place]]);
-  const name = x => x ? x.estacion : "";
-  for (const e of EVENTS[station].lle) add(e.min, 0, e.train, e.via, "Entra de", name(neighbours(e.train, e.idx).before[0]));
-  for (const e of EVENTS[station].pas) add(e.min, 1, e.train, "", "Pasa para", name(neighbours(e.train, e.idx).after[0]));
-  for (const e of EVENTS[station].sal) add(e.min, 2, e.train, e.via, "Sale para", name(neighbours(e.train, e.idx).after[0]));
+  // ORIGEN / DESTINO is the adjacent station ("colateral") in the train's cyclic
+  // itinerary, passes included: previous event for arrivals, next for the rest.
+  const side = (e, step) => { const ev = e.train.eventos; return ev[(e.idx + step + ev.length) % ev.length].estacion; };
+  for (const e of EVENTS[station].lle) add(e.min, 0, e.train, e.via, "Entra de", side(e, -1));
+  for (const e of EVENTS[station].pas) add(e.min, 1, e.train, "", "Pasa para", side(e, 1));
+  for (const e of EVENTS[station].sal) add(e.min, 2, e.train, e.via, "Sale para", side(e, 1));
   rows.sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2][1].v - b[2][1].v);
   // A train is standing here at minute 0 when its stop spans the cycle boundary or arrives exactly at 0.
   const start = !cyclic ? [] : EVENTS[station].lle
