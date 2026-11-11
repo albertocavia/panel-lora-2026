@@ -283,25 +283,38 @@ function buildEvents(){
 const EVENTS = buildEvents();
 
 // ---- Excel export (no libraries: minimal XLSX = ZIP "store" + SpreadsheetML) ----
-// One sheet per station with the same rows as the "Todo" tab. A cyclic
-// timetable has no absolute hour, so times are minutes past the hour (":05").
-const XL_HEAD = ["Movimiento", "Minuto", "Procedencia / destino", "Tren", "Número", "Vía", "Observaciones"];
-const XL_WIDTH = [13, 9, 34, 16, 9, 6, 42];
-const xlTime = m => CYCLE >= 1440 ? fmt(m) : CYCLE === 60 ? ":" + pad(m % 60) : m + " min";
+// One sheet per station in the organiser's own layout (MINUTO, TREN, Vía, ...).
+// The timetable is a cycle with no absolute hour, so MINUTO is a number: the
+// minute inside the cycle (0-59 for a 60-minute cycle; minute of the day when
+// the timetable is not cyclic).
+const XL_HEAD = ["MINUTO", "TREN", "Vía", "LOCOMOTORA/TREN", "Composición", "ACCIÓN", "ORIGEN / DESTINO"];
+const XL_WIDTH = [9, 7, 6, 18, 14, 12, 30];
 
+// Rows [minute, train no., track, train name, "", action, place] of one station:
+// "Punto de partida" rows (trains standing there at minute 0) first, then by minute.
 function stationRows(station){
-  const mod = (a, n) => ((a % n) + n) % n;
-  return EVENTS[station].todo
-    .map(e => ({...e, at: CYCLE < 1440 ? mod(e.min, CYCLE) : e.min}))
-    .sort((a, b) => a.at - b.at || a.ord - b.ord || a.train.numero - b.train.numero)
-    .map(e => [e.mov, xlTime(e.at), e.place, e.train.tipo, e.train.numero, e.via ?? "", e.obs]);
+  const mod = (a, n) => ((a % n) + n) % n, cyclic = CYCLE < 1440;
+  const at = m => cyclic ? mod(m, CYCLE) : m;
+  const rows = [];   // [sort minute, order within the minute, row]
+  const add = (min, ord, t, via, action, place) => rows.push([at(min), ord, [at(min), t.numero, via ?? "", t.tipo, "", action, place]]);
+  const name = x => x ? x.estacion : "";
+  for (const e of EVENTS[station].lle) add(e.min, 0, e.train, e.via, "Entra de", name(neighbours(e.train, e.idx).before[0]));
+  for (const e of EVENTS[station].pas) add(e.min, 1, e.train, "", "Pasa para", name(neighbours(e.train, e.idx).after[0]));
+  for (const e of EVENTS[station].sal) add(e.min, 2, e.train, e.via, "Sale para", name(neighbours(e.train, e.idx).after[0]));
+  rows.sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2][1] - b[2][1]);
+  // A train is standing here at minute 0 when its stop spans the cycle boundary or arrives exactly at 0.
+  const start = !cyclic ? [] : EVENTS[station].lle
+    .filter(e => e.train.eventos[e.idx].arr % CYCLE === 0 || e.train.eventos[e.idx].arr > e.train.eventos[e.idx].dep)
+    .sort((a, b) => a.train.numero - b.train.numero)
+    .map(e => [0, e.train.numero, e.via ?? "", e.train.tipo, "", "", "Punto de partida"]);
+  return [...start, ...rows.map(r => r[2])];
 }
 
 // Excel sheet names: max 31 chars, none of []:*?/\ , unique ignoring case.
 function sheetNames(names){
   const used = new Set();
   return names.map(n => {
-    const base = (n.replace(/[\[\]:*?\/\\]/g, "").trim() || "Hoja").slice(0, 31);
+    const base = (n.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[\[\]:*?\/\\]/g, "").trim() || "Hoja").slice(0, 31);
     let name = base, k = 2;
     while (used.has(name.toLowerCase())) name = base.slice(0, 31 - String(k).length - 1) + " " + k++;
     used.add(name.toLowerCase());
@@ -312,16 +325,16 @@ function sheetNames(names){
 const xmlEsc = s => String(s).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "")
   .replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const colName = i => String.fromCharCode(65 + i);
-// Every value is written as text (inlineStr) so Excel never reinterprets "09:05" or ":05".
-const xlCell = (v, r, c, bold) => v === "" ? "" :
+// Numbers are written as numbers; everything else as text (inlineStr).
+const xlCell = (v, r, c, bold) => v === "" ? "" : typeof v === "number" ? `<c r="${colName(c)}${r}"><v>${v}</v></c>` :
   `<c r="${colName(c)}${r}" t="inlineStr"${bold ? ' s="1"' : ""}><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
 
-function sheetXml(title, note, rows){
+function sheetXml(title, event, rows){
   const line = (cells, r, bold) => `<row r="${r}">${cells.map((v, c) => xlCell(v, r, c, bold)).join("")}</row>`;
-  const body = [line([title], 1, true), line([note], 2, false), line(XL_HEAD, 3, true), ...rows.map((row, i) => line(row, i + 4, false))];
+  const body = [line([title], 1, true), line([event], 3, false), line(XL_HEAD, 4, true), ...rows.map((row, i) => line(row, i + 5, false))];
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
     '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
-    '<sheetViews><sheetView workbookViewId="0"><pane ySplit="3" topLeftCell="A4" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>' +
+    '<sheetViews><sheetView workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>' +
     '<sheetFormatPr defaultRowHeight="15"/>' +
     `<cols>${XL_WIDTH.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("")}</cols>` +
     `<sheetData>${body.join("")}</sheetData></worksheet>`;
@@ -350,7 +363,7 @@ function zipStore(files){
   return out;
 }
 
-// sheets = [{name, title, note, rows}] -> .xlsx bytes
+// sheets = [{name, title, event, rows}] -> .xlsx bytes
 function buildXlsx(sheets){
   const R = "http://schemas.openxmlformats.org/", head = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
   const names = sheetNames(sheets.map(s => s.name));
@@ -364,13 +377,12 @@ function buildXlsx(sheets){
       sheets.map((_, i) => `<Relationship Id="rId${i + 1}" Type="${R}officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join("") +
       `<Relationship Id="rId${sheets.length + 1}" Type="${R}officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
     ["xl/styles.xml", head + `<styleSheet xmlns="${R}spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs></styleSheet>`],
-    ...sheets.map((s, i) => [`xl/worksheets/sheet${i + 1}.xml`, sheetXml(s.title, s.note, s.rows)]),
+    ...sheets.map((s, i) => [`xl/worksheets/sheet${i + 1}.xml`, sheetXml(s.title, s.event, s.rows)]),
   ]);
 }
 
 function excelFile(){
-  const note = CYCLE < 1440 ? `Horario cíclico: se repite cada ${CYCLE === 60 ? "hora" : CYCLE + " minutos"}; la hora indica el minuto dentro del ciclo.` : "";
-  const bytes = buildXlsx(STATIONS.map(s => ({name: s, title: `${s} · ${DATA.encuentro}`, note, rows: stationRows(s)})));
+  const bytes = buildXlsx(STATIONS.map(s => ({name: s, title: s, event: DATA.encuentro, rows: stationRows(s)})));
   const slug = DATA.encuentro.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
   return {bytes, name: `horarios_${slug}.xlsx`};
 }
