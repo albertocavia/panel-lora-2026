@@ -2,217 +2,322 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Panel Lora 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lora Del Río 2026 · Horarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --navy:#16325c; --navy2:#22477e; --ink:#1d2a1d; --row:#e3ecd2; --row2:#d8e4c3;
-  --time:#1f8a3e; --page:#2a2a2a; --paper:#ffffff; --muted:#8aa0bd; --line:#9fb08a;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--page);color:#eee;font-family:"Barlow Condensed","Roboto Condensed","Arial Narrow",Arial,sans-serif}
-.wrap{max-width:1300px;margin:0 auto;padding:16px}
-.board{background:#111;border-radius:10px;padding:10px;overflow-x:auto}
-.head{display:flex;flex-wrap:wrap;align-items:stretch;background:var(--paper);color:var(--navy)}
-.clock{background:var(--navy);color:#fff;font-size:56px;font-weight:700;padding:6px 20px;letter-spacing:1px;min-width:190px;text-align:center}
-.clock .sep{animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:.2}}
-.tabs{display:flex;align-items:center;gap:14px;padding:0 18px}
-.tab{font-size:36px;font-weight:700;color:var(--muted);cursor:pointer;background:none;border:0;font-family:inherit;padding:0}
-.tab.on{color:var(--navy)}
-.sub{border-left:3px solid var(--navy);padding-left:10px;font-size:20px;letter-spacing:1px;white-space:nowrap}
-.ctl{display:flex;align-items:center;gap:8px;padding:8px 14px;flex-wrap:wrap;margin-left:auto}
-.ctl label{font-size:13px;font-weight:700;letter-spacing:1px}
-select,input,button.btn{font:inherit;font-size:18px;border:2px solid var(--navy);border-radius:6px;padding:5px 10px;color:var(--navy);background:#fff}
-button.btn{background:var(--navy);color:#fff;font-weight:700;cursor:pointer}
-table{width:100%;border-collapse:collapse;background:var(--row)}
-thead th{background:var(--paper);color:var(--navy);text-align:left;font-size:20px;padding:6px 10px 4px;line-height:1}
-thead th small{display:block;font-size:11px;letter-spacing:1px;color:#58739a;font-weight:600}
-tbody td{color:var(--ink);font-size:30px;font-weight:600;padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
-tbody tr:nth-child(even) td{background:var(--row2)}
-td.t{background:var(--time)!important;color:#fff;text-align:center;width:120px}
-td.dest{text-transform:uppercase;width:34%}
-td.obs{font-size:22px;text-transform:uppercase;max-width:420px;overflow:hidden;text-overflow:ellipsis}
-td.via{font-size:34px;font-weight:700;text-align:center;width:70px}
-.badge{display:inline-block;min-width:150px;text-align:center;padding:4px 10px;border-radius:2px;font-size:24px;font-weight:700;text-transform:uppercase}
-.paso td{opacity:.75}
-.empty td{text-align:center;font-size:22px}
-.note{font-size:14px;color:#ccc;margin:10px 4px}
-details{margin:6px 4px}
-summary{cursor:pointer;font-weight:700;color:#ddd}
-.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:6px 18px;margin-top:8px}
-.leg{display:flex;gap:8px;align-items:flex-start;font-size:15px;cursor:pointer}
-.leg b.n{min-width:38px;text-align:center;border-radius:3px;padding:1px 4px}
-.leg:hover{color:#fff}
-.it{margin-top:16px}
-.it h2{color:#fff;font-size:24px;margin:0 0 6px}
-.it td{font-size:24px}
-.it tr.pas td{opacity:.65;font-style:italic}
-@media (max-width:700px){
-  .clock{font-size:40px;min-width:130px}.tab{font-size:26px}.sub{display:none}
-  tbody td{font-size:20px;padding:6px}.badge{min-width:80px;font-size:16px}td.t{width:70px}
-  td.obs{font-size:15px;max-width:160px}.legend{grid-template-columns:1fr}
-  #thead th:nth-child(5),#tbody td:nth-child(5),#thead th:nth-child(6),#tbody td:nth-child(6){display:none}
-}
+  /* Board design taken from the panel a participant shared for Lora 2026
+     (encuentros/lora_2026/fuentes/panel_chafer_original.html). */
+  :root{
+    --navy:#14365f; --navy-2:#0d2747; --head-bg:#ffffff; --head-txt:#1d4c7c;
+    --row-bg:#e3ebcf; --row-alt:#dae4c2; --row-line:#9aa68a; --row-txt:#24302a;
+    --time-bg:#1e8a3c; --time-txt:#ffffff; --page:#2b2b2b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--page);font-family:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;color:var(--row-txt)}
+  .wrap{max-width:1280px;margin:24px auto;padding:0 16px}
+  .board{background:#111;border-radius:10px;padding:10px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .screen{background:var(--head-bg);overflow:hidden}
+
+  .top{display:flex;flex-wrap:wrap;align-items:stretch;background:var(--head-bg);border-bottom:1px solid #cfd8e3}
+  .clock{background:var(--navy);color:#fff;font-weight:600;font-size:clamp(28px,4.5vw,52px);padding:6px 18px;display:flex;align-items:center;letter-spacing:1px;font-variant-numeric:tabular-nums}
+  .clock .sep{animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:.2}}
+  .title{display:flex;align-items:center;gap:14px;padding:6px 18px;flex:1 1 auto}
+  .tabs{display:flex;gap:6px}
+  .tab{border:0;background:none;cursor:pointer;font:inherit;color:#8aa0b8;font-weight:600;font-size:clamp(22px,3.4vw,40px);padding:0 4px;line-height:1}
+  .tab[aria-selected="true"]{color:var(--head-txt)}
+  .tab-sub{font-size:clamp(13px,1.6vw,20px);color:var(--head-txt);text-transform:uppercase;border-left:3px solid var(--head-txt);padding-left:12px;white-space:nowrap}
+  .controls{display:flex;align-items:center;gap:10px;padding:8px 16px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
+  .logo{display:flex;align-items:center;padding:4px 14px 4px 4px}
+  .logo img{height:78px;width:auto;display:block}
+  .controls label{font-size:13px;color:var(--head-txt);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  select,input[type=time],.btn{font:inherit;font-size:17px;padding:6px 10px;border:2px solid var(--navy);border-radius:6px;background:#fff;color:var(--navy-2);font-weight:600}
+  select{min-width:200px;cursor:pointer}
+  .btn{cursor:pointer;background:var(--navy);color:#fff}
+  .btn:hover{background:var(--navy-2)}
+
+  table{width:100%;border-collapse:collapse;table-layout:fixed}
+  thead th{background:var(--head-bg);color:var(--head-txt);text-align:left;font-weight:600;font-size:20px;padding:12px 10px 8px;line-height:1.05}
+  tbody td{background:var(--row-bg);border-bottom:2px solid var(--row-line);padding:0 10px;height:64px;font-size:clamp(20px,2.6vw,32px);font-weight:600;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  tbody tr:nth-child(even) td{background:var(--row-alt)}
+  tbody td.t{background:var(--time-bg)!important;color:var(--time-txt);text-align:center;font-variant-numeric:tabular-nums;border-bottom-color:#17702f}
+  td.num{font-variant-numeric:tabular-nums;font-size:clamp(18px,2.2vw,28px)}
+  td.via{font-size:clamp(22px,3vw,38px)}
+  td.obs{font-size:clamp(14px,1.7vw,22px)}
+  tr.paso td:not(.t){color:#5b6656}
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:100%;max-width:150px;height:44px;border:0;border-radius:2px;font:inherit;font-size:clamp(15px,1.8vw,22px);font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer}
+  .badge:hover,.badge:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+  .empty td{text-align:center;font-size:22px;text-transform:none;color:#555}
+  .col-t{width:11%}.col-d{width:33%}.col-tr{width:15%}.col-n{width:10%}.col-v{width:8%}.col-o{width:23%}
+
+  .foot{color:#cfcfcf;font-size:14px;padding:12px 4px 0;line-height:1.45}
+  .foot b{color:#fff}
+  details{margin-top:10px;color:#ddd}
+  summary{cursor:pointer;font-weight:600}
+  .legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px 18px;margin-top:8px;font-size:14px}
+  .legend button{display:flex;gap:8px;align-items:baseline;text-align:left;background:none;border:0;color:inherit;font:inherit;padding:2px;cursor:pointer}
+  .legend button:hover{color:#fff}
+  .legend .sw{display:inline-block;min-width:34px;text-align:center;border-radius:3px;font-weight:700;padding:1px 4px}
+
+  /* Itinerary pop-up */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:flex-start;justify-content:center;padding:4vh 12px;z-index:10;overflow-y:auto}
+  .modal.open{display:flex}
+  .card{background:var(--head-bg);width:100%;max-width:760px;border-radius:8px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+  .card-head{display:flex;align-items:center;gap:12px;background:var(--navy);color:#fff;padding:10px 12px 10px 16px}
+  .card-head .badge{width:auto;min-width:110px;padding:0 12px;cursor:default}
+  .card-head h2{margin:0;font-size:clamp(20px,3vw,28px);font-weight:600;flex:1;min-width:0}
+  .close{background:none;border:2px solid #fff;color:#fff;font:inherit;font-size:26px;font-weight:700;line-height:1;width:44px;height:44px;border-radius:6px;cursor:pointer;flex:none}
+  .close:hover{background:#fff;color:var(--navy)}
+  .card-info{padding:10px 16px;color:var(--head-txt);font-size:16px;border-bottom:1px solid #cfd8e3}
+  .card table td{height:44px;font-size:clamp(17px,2.2vw,22px);text-transform:none}
+  .card table th{font-size:16px;padding:8px 10px}
+  .card tr.here td{background:#cfdcef!important;color:var(--navy-2)}
+  .card tr.paso td{font-style:italic}
+
+  @media (max-width:760px){
+    .top{flex-wrap:wrap}
+    .controls{width:100%;justify-content:flex-start;order:3}
+    .logo{margin-left:auto;padding:4px 8px}
+    .logo img{height:56px}
+    select{min-width:0;flex:1}
+    .col-o,td.obs,th.obs{display:none}
+    .col-d{width:40%}.col-tr{width:22%}.col-n{width:14%}.col-v{width:12%}.col-t{width:16%}
+    tbody td{height:52px;padding:0 6px}
+    .badge{height:34px}
+    .card .col-ip{display:none}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="board">
-    <div class="head">
-      <div class="clock" id="clock">--<span class="sep">:</span>--</div>
-      <div class="tabs">
-        <button class="tab on" data-v="salidas">Salidas</button>
-        <button class="tab" data-v="llegadas">Llegadas</button>
-        <button class="tab" data-v="pasos">Pasos</button>
-        <span class="sub" id="sub">DEPARTURES</span>
+    <div class="screen">
+      <div class="top">
+        <div class="clock" id="clock">--<span class="sep">:</span>--</div>
+        <div class="title">
+          <div class="tabs" role="tablist">
+            <button class="tab" role="tab" data-mode="sal" aria-selected="true">Salidas</button>
+            <button class="tab" role="tab" data-mode="lle" aria-selected="false">Llegadas</button>
+            <button class="tab" role="tab" data-mode="pas" aria-selected="false">Pasos</button>
+          </div>
+          <span class="tab-sub" id="tab-sub">Próximas salidas</span>
+        </div>
+        <div class="controls">
+          <label for="station">Estación</label>
+          <select id="station"></select>
+          <input type="time" id="manual" title="Hora simulada (vacío = hora real)">
+          <button class="btn" id="now" type="button">Ahora</button>
+        </div>
+        <div class="logo" id="logo" hidden></div>
       </div>
-      <div class="ctl">
-        <label for="est">ESTACIÓN</label><select id="est"></select>
-        <input type="time" id="hora" title="Hora simulada">
-        <button class="btn" id="ahora">Ahora</button>
-      </div>
+      <table>
+        <colgroup><col class="col-t"><col class="col-d"><col class="col-tr"><col class="col-n"><col class="col-v"><col class="col-o"></colgroup>
+        <thead><tr>
+          <th>Hora</th><th id="h-dest">Destino</th><th>Tren</th><th>Número</th><th>Vía</th><th class="obs">Observaciones</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
     </div>
+  </div>
+
+  <div class="foot">
+    Malla <b id="foot-name"></b>: ciclo de <span id="foot-cycle"></span> minutos que se repite cada hora. El panel muestra el ciclo completo ordenado a partir de la hora actual (o de la hora simulada). Pulsa en un tren para ver su itinerario.
+    <details>
+      <summary>Leyenda de trenes</summary>
+      <div class="legend" id="legend"></div>
+    </details>
+  </div>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="card">
+    <div class="card-head">
+      <span id="modal-badge"></span>
+      <h2 id="modal-title"></h2>
+      <button class="close" id="modal-close" type="button" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="card-info" id="modal-info"></div>
     <table>
-      <thead id="thead"></thead>
-      <tbody id="tbody"></tbody>
+      <colgroup><col style="width:40%"><col style="width:15%"><col style="width:15%"><col style="width:10%"><col class="col-ip" style="width:20%"></colgroup>
+      <thead><tr><th>Estación</th><th>Llega</th><th>Sale</th><th>Vía</th><th class="col-ip">Parada</th></tr></thead>
+      <tbody id="modal-rows"></tbody>
     </table>
   </div>
-  <p class="note" id="note"></p>
-  <details open><summary>Leyenda de trenes (pulsa un tren para ver su itinerario)</summary><div class="legend" id="legend"></div></details>
-  <div class="it" id="it"></div>
 </div>
-<script>
-const DATA = {"encuentro": "LORA DEL RÍO 2026", "ciclo_min": 60, "fuente": "MALLA lora 2026 V1.jpg (extracción automática por colores)", "estaciones": ["Bucle Carbonal", "Carbonal", "Silo", "Clasificación", "Bobadilla", "Las Aljabaras", "El Seco", "Dos Hermanas", "Lora del Río", "Las Mallas", "El Puerto Nuevo", "Aznalcázar"], "trenes": [{"numero": 70, "tipo": "ALTA V.", "vmax": 240, "long_max_mm": 2500, "color": "#8361e9", "recorrido": "Lora(2)-Bobadilla(3)-Aznalcázar(1)-Bobadilla(3)-Lora(2)", "eventos": [{"estacion": "Lora del Río", "arr": 59, "dep": 4, "tipo": "parada", "via": "2"}, {"estacion": "Dos Hermanas", "arr": 6, "dep": 6, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 6, "dep": 6, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 7, "dep": 20, "tipo": "parada", "via": "3"}, {"estacion": "Las Aljabaras", "arr": 21, "dep": 25, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 26, "dep": 35, "tipo": "parada", "via": "1"}, {"estacion": "Las Aljabaras", "arr": 36, "dep": 37, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 38, "dep": 55, "tipo": "parada", "via": "3"}, {"estacion": "Las Aljabaras", "arr": 56, "dep": 56, "tipo": "paso"}, {"estacion": "Dos Hermanas", "arr": 57, "dep": 57, "tipo": "paso"}]}, {"numero": 63, "tipo": "REG4", "vmax": 90, "long_max_mm": 1400, "color": "#d308de", "recorrido": "Las Mallas(1)-Lora del Río(3)-Las Mallas(4)-Lora del Río(3)-Las Mallas", "eventos": [{"estacion": "Lora del Río", "arr": 7, "dep": 20, "tipo": "parada", "via": "3"}, {"estacion": "Las Mallas", "arr": 22, "dep": 30, "tipo": "parada", "via": "4"}, {"estacion": "Lora del Río", "arr": 32, "dep": 50, "tipo": "parada", "via": "3"}, {"estacion": "Las Mallas", "arr": 52, "dep": 5, "tipo": "parada", "via": "1"}]}, {"numero": 62, "tipo": "REG3", "vmax": 90, "long_max_mm": 1100, "color": "#dc0a37", "recorrido": "Carbonal(3)-Bobadilla-Las Aljabaras-Aznalcázar(4)-Las Aljabaras-Bobadilla-Carbonal", "eventos": [{"estacion": "Carbonal", "arr": 7, "dep": 8, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 10, "dep": 11, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 13, "dep": 15, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 18, "dep": 30, "tipo": "parada", "via": "4"}, {"estacion": "Las Aljabaras", "arr": 31, "dep": 34, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 36, "dep": 45, "tipo": "parada"}, {"estacion": "Bucle Carbonal", "arr": 47, "dep": 47, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 48, "dep": 5, "tipo": "parada", "via": "3"}, {"estacion": "Bucle Carbonal", "arr": 6, "dep": 6, "tipo": "paso"}]}, {"numero": 61, "tipo": "REG2", "vmax": 90, "long_max_mm": 2000, "color": "#f78522", "recorrido": "Lora del Río(4)-Dos Hermanas-Las Aljabaras-Bobadilla(6)-Las Mallas(4)-Lora del Río(4)", "eventos": [{"estacion": "Dos Hermanas", "arr": 10, "dep": 12, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 15, "dep": 15, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 17, "dep": 39, "tipo": "parada", "via": "6"}, {"estacion": "Las Aljabaras", "arr": 41, "dep": 42, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 44, "dep": 46, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 47, "dep": 47, "tipo": "paso"}, {"estacion": "Las Mallas", "arr": 49, "dep": 52, "tipo": "parada", "via": "4"}, {"estacion": "Lora del Río", "arr": 54, "dep": 8, "tipo": "parada", "via": "4"}]}, {"numero": 60, "tipo": "REG1", "vmax": 90, "long_max_mm": 1100, "color": "#dea0b7", "recorrido": "Bobadilla(7)-Carbonal(3)-Bobadilla(7)", "eventos": [{"estacion": "Carbonal", "arr": 20, "dep": 21, "tipo": "parada", "via": "3"}, {"estacion": "Bucle Carbonal", "arr": 22, "dep": 22, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 23, "dep": 40, "tipo": "parada"}, {"estacion": "Bucle Carbonal", "arr": 41, "dep": 41, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 43, "dep": 18, "tipo": "parada", "via": "7"}]}, {"numero": 54, "tipo": "VIAJ.5", "vmax": 120, "long_max_mm": 2300, "color": "#5163eb", "recorrido": "Aznalcázar(2)-Bobadilla-Carbonal-Las Aljabaras-Aznalcázar(2)", "eventos": [{"estacion": "Bobadilla", "arr": 13, "dep": 22, "tipo": "parada"}, {"estacion": "Carbonal", "arr": 24, "dep": 32, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 34, "dep": 41, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 43, "dep": 46, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 47, "dep": 10, "tipo": "parada", "via": "2"}, {"estacion": "Las Aljabaras", "arr": 11, "dep": 11, "tipo": "paso"}]}, {"numero": 53, "tipo": "VIAJ.4", "vmax": 120, "long_max_mm": 2500, "color": "#79d3f8", "recorrido": "Bobadilla(4)-Aznalcázar(4)-Las Aljabaras-Carbonal-Bobadilla", "eventos": [{"estacion": "Las Aljabaras", "arr": 10, "dep": 12, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 13, "dep": 22, "tipo": "parada", "via": "4"}, {"estacion": "Las Aljabaras", "arr": 23, "dep": 28, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 29, "dep": 29, "tipo": "paso"}, {"estacion": "Bucle Carbonal", "arr": 32, "dep": 32, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 33, "dep": 46, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 49, "dep": 8, "tipo": "parada", "via": "4"}]}, {"numero": 52, "tipo": "VIAJ.3", "vmax": 120, "long_max_mm": 2500, "color": "#717da3", "recorrido": "Dos Hermanas(4)-Bobadilla-Lora del Río-Dos Hermanas", "eventos": [{"estacion": "Las Aljabaras", "arr": 5, "dep": 9, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 11, "dep": 24, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 26, "dep": 29, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 31, "dep": 33, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 34, "dep": 45, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 46, "dep": 3, "tipo": "parada", "via": "4"}]}, {"numero": 51, "tipo": "VIAJ.2", "vmax": 120, "long_max_mm": 3000, "color": "#a4d4e8", "recorrido": "Las Mallas(2)-Lora del Río-Bobadilla-Carbonal-Bobadilla-Las Mallas", "eventos": [{"estacion": "Lora del Río", "arr": 11, "dep": 19, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 20, "dep": 22, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 24, "dep": 24, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 25, "dep": 35, "tipo": "parada"}, {"estacion": "Bucle Carbonal", "arr": 37, "dep": 37, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 38, "dep": 41, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 43, "dep": 46, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 48, "dep": 51, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 53, "dep": 55, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 56, "dep": 56, "tipo": "paso"}, {"estacion": "Las Mallas", "arr": 57, "dep": 10, "tipo": "parada", "via": "2"}]}, {"numero": 50, "tipo": "VIAJ.1", "vmax": 120, "long_max_mm": 2900, "color": "#9d7841", "recorrido": "Carbonal(2)-Bobadilla-Lora del Río-Las Mallas-Dos Hermanas-Carbonal", "eventos": [{"estacion": "Bobadilla", "arr": 6, "dep": 8, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 10, "dep": 13, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 15, "dep": 17, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 18, "dep": 25, "tipo": "parada"}, {"estacion": "Las Mallas", "arr": 26, "dep": 40, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 42, "dep": 46, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 47, "dep": 47, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 49, "dep": 52, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 54, "dep": 54, "tipo": "paso"}, {"estacion": "Bucle Carbonal", "arr": 56, "dep": 56, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 57, "dep": 4, "tipo": "parada", "via": "2"}]}, {"numero": 31, "tipo": "MER1", "vmax": 90, "long_max_mm": 2000, "color": "#bced6f", "recorrido": "Silo-El Puerto Nuevo-Silo", "eventos": [{"estacion": "El Puerto Nuevo", "arr": 21, "dep": 43, "tipo": "parada"}, {"estacion": "Silo", "arr": 51, "dep": 14, "tipo": "parada"}]}, {"numero": 32, "tipo": "MER2", "vmax": 90, "long_max_mm": 2000, "color": "#93b47d", "recorrido": "El Puerto Nuevo-Silo-El Puerto Nuevo", "eventos": [{"estacion": "Lora del Río", "arr": 17, "dep": 20, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 21, "dep": 21, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 23, "dep": 23, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 24, "dep": 24, "tipo": "paso"}, {"estacion": "Silo", "arr": 25, "dep": 42, "tipo": "parada"}, {"estacion": "El Puerto Nuevo", "arr": 50, "dep": 15, "tipo": "parada"}]}, {"numero": 33, "tipo": "MER3", "vmax": 90, "long_max_mm": 2000, "color": "#8a9086", "recorrido": "El Puerto Nuevo-El Seco-El Puerto Nuevo", "eventos": [{"estacion": "Lora del Río", "arr": 10, "dep": 12, "tipo": "parada"}, {"estacion": "El Seco", "arr": 15, "dep": 34, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 37, "dep": 38, "tipo": "parada"}, {"estacion": "El Puerto Nuevo", "arr": 40, "dep": 8, "tipo": "parada"}]}, {"numero": 34, "tipo": "MER4", "vmax": 90, "long_max_mm": 2000, "color": "#535550", "recorrido": "El Seco-El Puerto Nuevo-El Seco", "eventos": [{"estacion": "El Puerto Nuevo", "arr": 14, "dep": 36, "tipo": "parada"}, {"estacion": "El Seco", "arr": 40, "dep": 10, "tipo": "parada"}]}, {"numero": 35, "tipo": "MER5", "vmax": 90, "long_max_mm": 2300, "color": "#cab564", "recorrido": "Las Mallas(6)-Lora del Río-Bobadilla-Clasificación-Bobadilla-Las Mallas", "eventos": [{"estacion": "Lora del Río", "arr": 5, "dep": 6, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 8, "dep": 8, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 11, "dep": 12, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 15, "dep": 16, "tipo": "parada"}, {"estacion": "Clasificación", "arr": 17, "dep": 26, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 28, "dep": 47, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 48, "dep": 48, "tipo": "paso"}, {"estacion": "Dos Hermanas", "arr": 50, "dep": 50, "tipo": "paso"}, {"estacion": "Lora del Río", "arr": 51, "dep": 51, "tipo": "paso"}, {"estacion": "Las Mallas", "arr": 52, "dep": 3, "tipo": "parada", "via": "6"}]}, {"numero": 36, "tipo": "MER6", "vmax": 90, "long_max_mm": 2300, "color": "#94e56d", "recorrido": "Bobadilla(8)-Las Aljabaras-Lora del Río-Las Mallas-Clasificación-Bobadilla", "eventos": [{"estacion": "Las Aljabaras", "arr": 4, "dep": 5, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 7, "dep": 8, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 10, "dep": 13, "tipo": "parada"}, {"estacion": "Las Mallas", "arr": 15, "dep": 23, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 25, "dep": 30, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 32, "dep": 32, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 33, "dep": 33, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 35, "dep": 43, "tipo": "parada", "via": "8"}, {"estacion": "Clasificación", "arr": 45, "dep": 55, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 57, "dep": 2, "tipo": "parada"}]}, {"numero": 37, "tipo": "MER7", "vmax": 90, "long_max_mm": 2500, "color": "#54956a", "recorrido": "Clasificación(4)-Bobadilla-Las Aljabaras-Aznalcázar(4)-Bobadilla-Clasificación", "eventos": [{"estacion": "Las Aljabaras", "arr": 7, "dep": 8, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 9, "dep": 37, "tipo": "parada", "via": "4"}, {"estacion": "Las Aljabaras", "arr": 38, "dep": 44, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 46, "dep": 51, "tipo": "parada"}, {"estacion": "Clasificación", "arr": 52, "dep": 3, "tipo": "parada", "via": "4"}, {"estacion": "Bobadilla", "arr": 4, "dep": 4, "tipo": "paso"}]}, {"numero": 41, "tipo": "LOM1", "vmax": 90, "long_max_mm": 2300, "color": "#832c1b", "recorrido": "Las Mallas(4)-Lora del Río-Lomo Asno-Clasificación(2)-Las Mallas", "eventos": [{"estacion": "Clasificación", "arr": 15, "dep": 36, "tipo": "parada", "via": "2"}, {"estacion": "Lora del Río", "arr": 41, "dep": 42, "tipo": "parada"}, {"estacion": "Las Mallas", "arr": 44, "dep": 8, "tipo": "parada", "via": "4"}, {"estacion": "Lora del Río", "arr": 9, "dep": 9, "tipo": "paso"}]}, {"numero": 42, "tipo": "LOM2", "vmax": 90, "long_max_mm": 2300, "color": "#ac7a6f", "recorrido": "Lora del Río(6)-Dos Hermanas-Lomo Asno-Clasificación(4)-Bobadilla-Lora del Río", "eventos": [{"estacion": "Dos Hermanas", "arr": 5, "dep": 6, "tipo": "parada"}, {"estacion": "Clasificación", "arr": 11, "dep": 39, "tipo": "parada", "via": "4"}, {"estacion": "Bobadilla", "arr": 41, "dep": 45, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 46, "dep": 46, "tipo": "paso"}, {"estacion": "Dos Hermanas", "arr": 48, "dep": 48, "tipo": "paso"}, {"estacion": "Lora del Río", "arr": 50, "dep": 3, "tipo": "parada", "via": "6"}]}, {"numero": 43, "tipo": "LOM3", "vmax": 90, "long_max_mm": 2300, "color": "#30564b", "recorrido": "Aznalcázar(6)-Bobadilla-Lomo Asno-Clasificación(6)-Las Aljabaras-Aznalcázar", "eventos": [{"estacion": "Clasificación", "arr": 7, "dep": 29, "tipo": "parada", "via": "6"}, {"estacion": "Bobadilla", "arr": 30, "dep": 30, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 32, "dep": 34, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 35, "dep": 2, "tipo": "parada", "via": "6"}, {"estacion": "Las Aljabaras", "arr": 3, "dep": 3, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 5, "dep": 5, "tipo": "paso"}]}, {"numero": 44, "tipo": "LOM4", "vmax": 90, "long_max_mm": 2300, "color": "#6e889f", "recorrido": "Las Aljabaras(3)-Bobadilla-Lomo Asno-Clasificación(1)-Aznalcázar-Las Aljabaras", "eventos": [{"estacion": "Clasificación", "arr": 5, "dep": 32, "tipo": "parada", "via": "1"}, {"estacion": "Bobadilla", "arr": 33, "dep": 33, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 35, "dep": 39, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 40, "dep": 52, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 53, "dep": 1, "tipo": "parada", "via": "3"}, {"estacion": "Bobadilla", "arr": 2, "dep": 2, "tipo": "paso"}]}]};
-const CYCLE = DATA.ciclo_min;
-const $ = s => document.querySelector(s);
-let view = "salidas", sim = null, trainSel = null;
 
+<script>
+/* Timetable extracted from the malla by herramientas/extraer_malla.py.
+   Each train: eventos = [{estacion, arr, dep, tipo: "parada"|"paso", via?}],
+   minutes inside the cycle, in cycle order (arr > dep means it crosses :00). */
+const DATA = {"encuentro": "LORA DEL RÍO 2026", "ciclo_min": 60, "fuente": "fuentes/malla_lora_2026_v1.jpg", "logo": null, "estaciones": ["Carbonal", "Silo", "Clasificación", "Bobadilla", "Las Aljabaras", "El Seco", "Dos Hermanas", "Lora del Río", "Las Mallas", "El Puerto Nuevo", "Aznalcázar", "Bucle Carbonal"], "trenes": [{"numero": 70, "tipo": "ALTA V.", "vmax": 240, "long_max_mm": 2500, "color": "#8361e9", "recorrido": "Lora(2)-Bobadilla(3)-Aznalcázar(1)-Bobadilla(3)-Lora(2)", "eventos": [{"estacion": "Bobadilla", "arr": 7, "dep": 20, "tipo": "parada", "via": "3"}, {"estacion": "Las Aljabaras", "arr": 21, "dep": 25, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 26, "dep": 35, "tipo": "parada", "via": "1"}, {"estacion": "Las Aljabaras", "arr": 36, "dep": 37, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 38, "dep": 55, "tipo": "parada", "via": "3"}, {"estacion": "Las Aljabaras", "arr": 56, "dep": 56, "tipo": "paso"}, {"estacion": "Dos Hermanas", "arr": 57, "dep": 57, "tipo": "paso"}, {"estacion": "Lora del Río", "arr": 57, "dep": 5, "tipo": "parada", "via": "2"}, {"estacion": "Dos Hermanas", "arr": 6, "dep": 6, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 6, "dep": 6, "tipo": "paso"}]}, {"numero": 63, "tipo": "REG4", "vmax": 90, "long_max_mm": 1400, "color": "#d308de", "recorrido": "Las Mallas(1)-Lora del Río(3)-Las Mallas(4)-Lora del Río(3)-Las Mallas", "eventos": [{"estacion": "Lora del Río", "arr": 6, "dep": 20, "tipo": "parada", "via": "3"}, {"estacion": "Las Mallas", "arr": 22, "dep": 30, "tipo": "parada", "via": "4"}, {"estacion": "Lora del Río", "arr": 32, "dep": 50, "tipo": "parada", "via": "3"}, {"estacion": "Las Mallas", "arr": 51, "dep": 5, "tipo": "parada", "via": "1"}]}, {"numero": 62, "tipo": "REG3", "vmax": 90, "long_max_mm": 1100, "color": "#dc0a37", "recorrido": "Carbonal(3)-Bobadilla-Las Aljabaras-Aznalcázar(4)-Las Aljabaras-Bobadilla-Carbonal", "eventos": [{"estacion": "Carbonal", "arr": 6, "dep": 8, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 10, "dep": 11, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 13, "dep": 15, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 17, "dep": 30, "tipo": "parada", "via": "4"}, {"estacion": "Las Aljabaras", "arr": 31, "dep": 34, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 36, "dep": 45, "tipo": "parada"}, {"estacion": "Bucle Carbonal", "arr": 47, "dep": 47, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 48, "dep": 5, "tipo": "parada", "via": "3"}, {"estacion": "Bucle Carbonal", "arr": 6, "dep": 6, "tipo": "paso"}]}, {"numero": 61, "tipo": "REG2", "vmax": 90, "long_max_mm": 2000, "color": "#f78522", "recorrido": "Lora del Río(4)-Dos Hermanas-Las Aljabaras-Bobadilla(6)-Las Mallas(4)-Lora del Río(4)", "eventos": [{"estacion": "Dos Hermanas", "arr": 10, "dep": 12, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 14, "dep": 15, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 16, "dep": 39, "tipo": "parada", "via": "6"}, {"estacion": "Las Aljabaras", "arr": 41, "dep": 42, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 44, "dep": 46, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 47, "dep": 47, "tipo": "paso"}, {"estacion": "Las Mallas", "arr": 48, "dep": 52, "tipo": "parada", "via": "4"}, {"estacion": "Lora del Río", "arr": 53, "dep": 8, "tipo": "parada", "via": "4"}]}, {"numero": 60, "tipo": "REG1", "vmax": 90, "long_max_mm": 1100, "color": "#dea0b7", "recorrido": "Bobadilla(7)-Carbonal(3)-Bobadilla(7)", "eventos": [{"estacion": "Carbonal", "arr": 20, "dep": 21, "tipo": "parada", "via": "3"}, {"estacion": "Bucle Carbonal", "arr": 22, "dep": 22, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 23, "dep": 40, "tipo": "parada"}, {"estacion": "Bucle Carbonal", "arr": 41, "dep": 41, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 43, "dep": 18, "tipo": "parada", "via": "7"}]}, {"numero": 54, "tipo": "VIAJ.5", "vmax": 120, "long_max_mm": 2300, "color": "#5163eb", "recorrido": "Aznalcázar(2)-Bobadilla-Carbonal-Las Aljabaras-Aznalcázar(2)", "eventos": [{"estacion": "Bobadilla", "arr": 12, "dep": 22, "tipo": "parada"}, {"estacion": "Carbonal", "arr": 23, "dep": 32, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 34, "dep": 41, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 42, "dep": 46, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 47, "dep": 10, "tipo": "parada", "via": "2"}, {"estacion": "Las Aljabaras", "arr": 11, "dep": 11, "tipo": "paso"}]}, {"numero": 53, "tipo": "VIAJ.4", "vmax": 120, "long_max_mm": 2500, "color": "#79d3f8", "recorrido": "Bobadilla(4)-Aznalcázar(4)-Las Aljabaras-Carbonal-Bobadilla", "eventos": [{"estacion": "Las Aljabaras", "arr": 10, "dep": 12, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 13, "dep": 22, "tipo": "parada", "via": "4"}, {"estacion": "Las Aljabaras", "arr": 23, "dep": 28, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 29, "dep": 29, "tipo": "paso"}, {"estacion": "Bucle Carbonal", "arr": 32, "dep": 32, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 32, "dep": 47, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 49, "dep": 8, "tipo": "parada", "via": "4"}]}, {"numero": 52, "tipo": "VIAJ.3", "vmax": 120, "long_max_mm": 2500, "color": "#717da3", "recorrido": "Dos Hermanas(4)-Bobadilla-Lora del Río-Dos Hermanas", "eventos": [{"estacion": "Las Aljabaras", "arr": 5, "dep": 9, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 10, "dep": 24, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 26, "dep": 29, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 31, "dep": 33, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 34, "dep": 45, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 46, "dep": 3, "tipo": "parada", "via": "4"}]}, {"numero": 51, "tipo": "VIAJ.2", "vmax": 120, "long_max_mm": 3000, "color": "#a4d4e8", "recorrido": "Las Mallas(2)-Lora del Río-Bobadilla-Carbonal-Bobadilla-Las Mallas", "eventos": [{"estacion": "Lora del Río", "arr": 11, "dep": 19, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 20, "dep": 22, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 24, "dep": 24, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 25, "dep": 35, "tipo": "parada"}, {"estacion": "Bucle Carbonal", "arr": 37, "dep": 37, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 38, "dep": 41, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 43, "dep": 46, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 48, "dep": 51, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 53, "dep": 55, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 56, "dep": 56, "tipo": "paso"}, {"estacion": "Las Mallas", "arr": 57, "dep": 10, "tipo": "parada", "via": "2"}]}, {"numero": 50, "tipo": "VIAJ.1", "vmax": 120, "long_max_mm": 2900, "color": "#9d7841", "recorrido": "Carbonal(2)-Bobadilla-Lora del Río-Las Mallas-Dos Hermanas-Carbonal", "eventos": [{"estacion": "Bobadilla", "arr": 6, "dep": 9, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 10, "dep": 13, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 15, "dep": 17, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 18, "dep": 25, "tipo": "parada"}, {"estacion": "Las Mallas", "arr": 26, "dep": 40, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 41, "dep": 46, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 47, "dep": 47, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 49, "dep": 52, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 53, "dep": 54, "tipo": "parada"}, {"estacion": "Bucle Carbonal", "arr": 56, "dep": 56, "tipo": "paso"}, {"estacion": "Carbonal", "arr": 56, "dep": 4, "tipo": "parada", "via": "2"}]}, {"numero": 31, "tipo": "MER1", "vmax": 90, "long_max_mm": 2000, "color": "#bced6f", "recorrido": "Silo-El Puerto Nuevo-Silo", "eventos": [{"estacion": "El Puerto Nuevo", "arr": 20, "dep": 43, "tipo": "parada"}, {"estacion": "Silo", "arr": 51, "dep": 14, "tipo": "parada"}]}, {"numero": 32, "tipo": "MER2", "vmax": 90, "long_max_mm": 2000, "color": "#93b47d", "recorrido": "El Puerto Nuevo-Silo-El Puerto Nuevo", "eventos": [{"estacion": "Lora del Río", "arr": 17, "dep": 20, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 21, "dep": 21, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 23, "dep": 23, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 24, "dep": 24, "tipo": "paso"}, {"estacion": "Silo", "arr": 25, "dep": 43, "tipo": "parada"}, {"estacion": "El Puerto Nuevo", "arr": 50, "dep": 15, "tipo": "parada"}]}, {"numero": 33, "tipo": "MER3", "vmax": 90, "long_max_mm": 2000, "color": "#8a9086", "recorrido": "El Puerto Nuevo-El Seco-El Puerto Nuevo", "eventos": [{"estacion": "Lora del Río", "arr": 10, "dep": 13, "tipo": "parada"}, {"estacion": "El Seco", "arr": 15, "dep": 34, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 36, "dep": 38, "tipo": "parada"}, {"estacion": "El Puerto Nuevo", "arr": 40, "dep": 8, "tipo": "parada"}]}, {"numero": 34, "tipo": "MER4", "vmax": 90, "long_max_mm": 2000, "color": "#535550", "recorrido": "El Seco-El Puerto Nuevo-El Seco", "eventos": [{"estacion": "El Puerto Nuevo", "arr": 14, "dep": 36, "tipo": "parada"}, {"estacion": "El Seco", "arr": 40, "dep": 10, "tipo": "parada"}]}, {"numero": 35, "tipo": "MER5", "vmax": 90, "long_max_mm": 2300, "color": "#cab564", "recorrido": "Las Mallas(6)-Lora del Río-Bobadilla-Clasificación-Bobadilla-Las Mallas", "eventos": [{"estacion": "Lora del Río", "arr": 4, "dep": 7, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 8, "dep": 8, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 10, "dep": 13, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 14, "dep": 16, "tipo": "parada"}, {"estacion": "Clasificación", "arr": 17, "dep": 26, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 28, "dep": 47, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 48, "dep": 48, "tipo": "paso"}, {"estacion": "Dos Hermanas", "arr": 50, "dep": 50, "tipo": "paso"}, {"estacion": "Lora del Río", "arr": 51, "dep": 51, "tipo": "paso"}, {"estacion": "Las Mallas", "arr": 52, "dep": 3, "tipo": "parada", "via": "6"}]}, {"numero": 36, "tipo": "MER6", "vmax": 90, "long_max_mm": 2300, "color": "#94e56d", "recorrido": "Bobadilla(8)-Las Aljabaras-Lora del Río-Las Mallas-Clasificación-Bobadilla", "eventos": [{"estacion": "Las Aljabaras", "arr": 3, "dep": 5, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 7, "dep": 8, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 10, "dep": 13, "tipo": "parada"}, {"estacion": "Las Mallas", "arr": 15, "dep": 23, "tipo": "parada"}, {"estacion": "Lora del Río", "arr": 24, "dep": 30, "tipo": "parada"}, {"estacion": "Dos Hermanas", "arr": 32, "dep": 32, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 33, "dep": 33, "tipo": "paso"}, {"estacion": "Bobadilla", "arr": 35, "dep": 43, "tipo": "parada", "via": "8"}, {"estacion": "Clasificación", "arr": 45, "dep": 55, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 57, "dep": 2, "tipo": "parada"}]}, {"numero": 37, "tipo": "MER7", "vmax": 90, "long_max_mm": 2500, "color": "#54956a", "recorrido": "Clasificación(4)-Bobadilla-Las Aljabaras-Aznalcázar(4)-Bobadilla-Clasificación", "eventos": [{"estacion": "Las Aljabaras", "arr": 6, "dep": 8, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 9, "dep": 37, "tipo": "parada", "via": "4"}, {"estacion": "Las Aljabaras", "arr": 38, "dep": 44, "tipo": "parada"}, {"estacion": "Bobadilla", "arr": 45, "dep": 51, "tipo": "parada"}, {"estacion": "Clasificación", "arr": 52, "dep": 3, "tipo": "parada", "via": "4"}, {"estacion": "Bobadilla", "arr": 4, "dep": 4, "tipo": "paso"}]}, {"numero": 41, "tipo": "LOM1", "vmax": 90, "long_max_mm": 2300, "color": "#832c1b", "recorrido": "Las Mallas(4)-Lora del Río-Lomo Asno-Clasificación(2)-Las Mallas", "eventos": [{"estacion": "Clasificación", "arr": 15, "dep": 36, "tipo": "parada", "via": "2"}, {"estacion": "Lora del Río", "arr": 41, "dep": 42, "tipo": "parada"}, {"estacion": "Las Mallas", "arr": 44, "dep": 8, "tipo": "parada", "via": "4"}, {"estacion": "Lora del Río", "arr": 9, "dep": 9, "tipo": "paso"}]}, {"numero": 42, "tipo": "LOM2", "vmax": 90, "long_max_mm": 2300, "color": "#ac7a6f", "recorrido": "Lora del Río(6)-Dos Hermanas-Lomo Asno-Clasificación(4)-Bobadilla-Lora del Río", "eventos": [{"estacion": "Dos Hermanas", "arr": 5, "dep": 6, "tipo": "parada"}, {"estacion": "Clasificación", "arr": 11, "dep": 39, "tipo": "parada", "via": "4"}, {"estacion": "Bobadilla", "arr": 40, "dep": 45, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 46, "dep": 46, "tipo": "paso"}, {"estacion": "Dos Hermanas", "arr": 48, "dep": 48, "tipo": "paso"}, {"estacion": "Lora del Río", "arr": 49, "dep": 3, "tipo": "parada", "via": "6"}]}, {"numero": 43, "tipo": "LOM3", "vmax": 90, "long_max_mm": 2300, "color": "#30564b", "recorrido": "Aznalcázar(6)-Bobadilla-Lomo Asno-Clasificación(6)-Las Aljabaras-Aznalcázar", "eventos": [{"estacion": "Bobadilla", "arr": 4, "dep": 5, "tipo": "parada"}, {"estacion": "Clasificación", "arr": 7, "dep": 29, "tipo": "parada", "via": "6"}, {"estacion": "Bobadilla", "arr": 30, "dep": 30, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 31, "dep": 34, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 35, "dep": 2, "tipo": "parada", "via": "6"}, {"estacion": "Las Aljabaras", "arr": 3, "dep": 3, "tipo": "paso"}]}, {"numero": 44, "tipo": "LOM4", "vmax": 90, "long_max_mm": 2300, "color": "#6e889f", "recorrido": "Las Aljabaras(3)-Bobadilla-Lomo Asno-Clasificación(1)-Aznalcázar-Las Aljabaras", "eventos": [{"estacion": "Clasificación", "arr": 5, "dep": 32, "tipo": "parada", "via": "1"}, {"estacion": "Bobadilla", "arr": 33, "dep": 33, "tipo": "paso"}, {"estacion": "Las Aljabaras", "arr": 35, "dep": 39, "tipo": "parada"}, {"estacion": "Aznalcázar", "arr": 40, "dep": 52, "tipo": "parada"}, {"estacion": "Las Aljabaras", "arr": 53, "dep": 1, "tipo": "parada", "via": "3"}, {"estacion": "Bobadilla", "arr": 2, "dep": 2, "tipo": "paso"}]}]};
+const CYCLE = DATA.ciclo_min;
+const KEY = "panel-" + DATA.encuentro;
+
+const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
-function nowMin() {            // minutes since midnight (real or simulated)
-  if (sim !== null) return sim;
+const fmt = m => pad(Math.floor((((m % 1440) + 1440) % 1440) / 60)) + ":" + pad(((m % 60) + 60) % 60);
+const nextAt = (c, now) => now + ((c - now % CYCLE) % CYCLE + CYCLE) % CYCLE;   // next minute >= now at cycle minute c
+const dwell = e => ((e.dep - e.arr) % CYCLE + CYCLE) % CYCLE;
+function textOn(hex){
+  const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? "#111" : "#fff";
+}
+const badge = (t, tag = "button") =>
+  `<${tag} class="badge" ${tag === "button" ? `type="button" data-train="${t.numero}" title="Ver itinerario del ${t.numero}"` : ""} style="background:${t.color};color:${textOn(t.color)}">${t.tipo}</${tag}>`;
+
+// Stations served by some train, in malla order (loops are pass points only)
+const USED = new Set(DATA.trenes.flatMap(t => t.eventos.map(e => e.estacion)));
+const STATIONS = DATA.estaciones.filter(s => USED.has(s));
+
+// For each event: previous/next stops (passes skipped), for origin, destination and "Continúa"
+function neighbours(t, i){
+  const ev = t.eventos, n = ev.length, after = [], before = [];
+  for (let k = 1; k < n; k++){ const x = ev[(i + k) % n]; if (x.tipo === "parada") after.push(x); }
+  for (let k = 1; k < n; k++){ const x = ev[(i - k + n) % n]; if (x.tipo === "parada") before.push(x); }
+  return {after, before};
+}
+
+function buildEvents(){
+  const ev = {}; STATIONS.forEach(s => ev[s] = {sal: [], lle: [], pas: []});
+  for (const t of DATA.trenes){
+    t.eventos.forEach((e, i) => {
+      if (!ev[e.estacion]) return;
+      const {after, before} = neighbours(t, i);
+      const next = after[0], prev = before[0];
+      if (e.tipo === "paso"){
+        ev[e.estacion].pas.push({min: e.arr, train: t, idx: i, place: `${prev ? prev.estacion : ""} → ${next ? next.estacion : ""}`, obs: "Sin parada"});
+        return;
+      }
+      const dest = next && next.estacion === e.estacion ? "Bucle → " + e.estacion : (next ? next.estacion : "");
+      const orig = prev && prev.estacion === e.estacion ? "Bucle ← " + e.estacion : (prev ? prev.estacion : "");
+      const cont = [];
+      for (const x of after.slice(1)){
+        if (cont.length === 2) break;
+        if (x.estacion !== (next && next.estacion) && x.estacion !== cont[cont.length - 1]) cont.push(x.estacion);
+      }
+      const d = dwell(e);
+      ev[e.estacion].sal.push({min: e.dep, train: t, idx: i, place: dest, via: e.via, obs: cont.length ? "Continúa: " + cont.join(" · ") : ""});
+      ev[e.estacion].lle.push({min: e.arr, train: t, idx: i, place: orig, via: e.via, obs: d ? `Estaciona ${d} min` : "Parada breve"});
+    });
+  }
+  return ev;
+}
+const EVENTS = buildEvents();
+
+// ---- state -----------------------------------------------------------------
+let mode = "sal";
+const sel = $("station");
+STATIONS.forEach(s => { const o = document.createElement("option"); o.value = o.textContent = s; sel.appendChild(o); });
+sel.value = STATIONS[0];
+try { const saved = localStorage.getItem(KEY); if (saved && STATIONS.includes(saved)) sel.value = saved; } catch (e) {}
+
+function nowMin(){
+  const v = $("manual").value;
+  if (v){ const [h, m] = v.split(":").map(Number); return h * 60 + m; }
   const d = new Date(); return d.getHours() * 60 + d.getMinutes();
 }
-const fmt = m => pad(Math.floor(((m % 1440) + 1440) % 1440 / 60)) + ":" + pad(((m % 60) + 60) % 60);
-// next absolute minute (>= now) at which cycle minute c happens
-const nextAt = (c, now) => now + ((c - now % CYCLE) % CYCLE + CYCLE) % CYCLE;
-const dwell = e => ((e.dep - e.arr) % CYCLE + CYCLE) % CYCLE;
-const textColor = hex => {
-  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.substr(i, 2), 16));
-  return (r * 299 + g * 587 + b * 114) / 1000 > 150 ? "#111" : "#fff";
+
+const LABELS = {
+  sal: {sub: "Próximas salidas", place: "Destino", none: "No hay salidas en esta estación."},
+  lle: {sub: "Próximas llegadas", place: "Procedencia", none: "No hay llegadas en esta estación."},
+  pas: {sub: "Trenes sin parada", place: "Recorrido", none: "Ningún tren pasa sin parar por esta estación."},
 };
-const badge = t => `<span class="badge" style="background:${t.color};color:${textColor(t.color)}">${t.tipo}</span>`;
 
-// stop-only view of each train's cycle, for "destino / continúa / procedencia"
-for (const t of DATA.trenes) t.paradas = t.eventos.filter(e => e.tipo === "parada");
-function around(t, e) {
-  const p = t.paradas, ev = t.eventos, i = ev.indexOf(e);
-  // previous and following stops in cycle order, starting from event e
-  const after = [], before = [];
-  for (let k = 1; k < ev.length; k++) { const x = ev[(i + k) % ev.length]; if (x.tipo === "parada") after.push(x); }
-  for (let k = 1; k < ev.length; k++) { const x = ev[(i - k + ev.length) % ev.length]; if (x.tipo === "parada") before.push(x); }
-  return { after, before };
+function render(){
+  const now = nowMin();
+  $("clock").innerHTML = fmt(now).replace(":", '<span class="sep">:</span>');
+  const list = EVENTS[sel.value][mode]
+    .map(e => ({...e, at: nextAt(e.min, now)}))
+    .sort((a, b) => a.at - b.at || a.train.numero - b.train.numero);
+  const tb = $("rows");
+  if (!list.length){ tb.innerHTML = `<tr class="empty"><td colspan="6">${LABELS[mode].none}</td></tr>`; return; }
+  tb.innerHTML = list.map(e => `<tr class="${mode === "pas" ? "paso" : ""}">
+      <td class="t">${fmt(e.at)}</td>
+      <td>${e.place}</td>
+      <td>${badge(e.train)}</td>
+      <td class="num">${e.train.numero}</td>
+      <td class="via">${e.via ?? ""}</td>
+      <td class="obs">${e.obs}</td>
+    </tr>`).join("");
 }
 
-function rows(station, now) {
-  const out = [];
-  for (const t of DATA.trenes) for (const e of t.eventos) {
-    if (e.estacion !== station) continue;
-    const { after, before } = around(t, e);
-    if (view === "pasos" && e.tipo === "paso")
-      out.push({ at: nextAt(e.arr, now), t, e, a: before[0], b: after[0] });
-    if (view !== "pasos" && e.tipo === "parada") {
-      if (view === "salidas") {
-        if (!after.length || after[0].estacion === station && after.length === 1) continue;
-        out.push({ at: nextAt(e.dep, now), t, e, dest: after[0], cont: after.slice(1, 4) });
-      } else {
-        out.push({ at: nextAt(e.arr, now), t, e, orig: before[0] });
-      }
-    }
+function setMode(m){
+  mode = m;
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.mode === m));
+  $("tab-sub").textContent = LABELS[m].sub;
+  $("h-dest").textContent = LABELS[m].place;
+  render();
+}
+
+// ---- itinerary pop-up -------------------------------------------------------
+let lastFocus = null;
+function openItinerary(num){
+  const t = DATA.trenes.find(x => x.numero === num);
+  if (!t) return;
+  const now = nowMin(), ev = t.eventos;
+  // Start where the train is now: the stop it is standing at, or else the
+  // next event it reaches.
+  let start = -1, clock = now;
+  ev.forEach((e, i) => {
+    const since = ((now - e.arr) % CYCLE + CYCLE) % CYCLE;
+    if (start < 0 && e.tipo === "parada" && since <= dwell(e) && since < CYCLE - 1){ start = i; clock = now - since; }
+  });
+  if (start < 0){
+    let best = Infinity;
+    ev.forEach((e, i) => { const d = nextAt(e.arr, now) - now; if (d < best){ best = d; start = i; } });
   }
-  return out.sort((x, y) => x.at - y.at || x.t.numero - y.t.numero);
+  const rows = [];
+  for (let k = 0; k < ev.length; k++){
+    const e = ev[(start + k) % ev.length];
+    const arr = nextAt(e.arr, clock);
+    const dep = e.tipo === "paso" ? arr : arr + dwell(e);
+    clock = dep;
+    const here = e.estacion === sel.value ? " here" : "";
+    rows.push(e.tipo === "paso"
+      ? `<tr class="paso${here}"><td>${e.estacion}</td><td colspan="2">pasa ${fmt(arr)}</td><td></td><td class="col-ip">sin parada</td></tr>`
+      : `<tr class="${here.trim()}"><td>${e.estacion}</td><td>${fmt(arr)}</td><td>${fmt(dep)}</td><td>${e.via ?? ""}</td><td class="col-ip">${dwell(e) ? dwell(e) + " min" : "breve"}</td></tr>`);
+  }
+  $("modal-badge").innerHTML = badge(t, "span");
+  $("modal-title").textContent = `Tren ${t.numero}`;
+  $("modal-info").textContent = `${t.recorrido}` + (t.vmax ? ` · ${t.vmax} km/h` : "") + (t.long_max_mm ? ` · longitud máx. ${t.long_max_mm} mm` : "");
+  $("modal-rows").innerHTML = rows.join("");
+  lastFocus = document.activeElement;
+  $("modal").classList.add("open");
+  $("modal-close").focus();
 }
-
-function render() {
-  const now = nowMin(), station = $("#est").value;
-  $("#clock").innerHTML = fmt(now).replace(":", '<span class="sep">:</span>');
-  document.querySelectorAll(".tab").forEach(b => b.classList.toggle("on", b.dataset.v === view));
-  $("#sub").textContent = { salidas: "DEPARTURES", llegadas: "ARRIVALS", pasos: "PASSING" }[view];
-  const head = {
-    salidas: ["Hora|TIME", "Destino|DESTINATION", "Tren|TRAIN", "Número|NUMBER", "Vía|PLATFORM", "Observaciones|OBSERVATIONS"],
-    llegadas: ["Hora|TIME", "Procedencia|ORIGIN", "Tren|TRAIN", "Número|NUMBER", "Vía|PLATFORM", "Observaciones|OBSERVATIONS"],
-    pasos: ["Hora|TIME", "De → a|FROM → TO", "Tren|TRAIN", "Número|NUMBER", "|", "Observaciones|OBSERVATIONS"],
-  }[view];
-  $("#thead").innerHTML = "<tr>" + head.map(h => { const [a, b] = h.split("|"); return `<th>${a}<small>${b}</small></th>`; }).join("") + "</tr>";
-  const r = rows(station, now);
-  $("#tbody").innerHTML = r.length ? r.map(x => {
-    const via = x.e.via || "";
-    let place, obs;
-    if (view === "salidas") {
-      place = x.dest.estacion;
-      obs = x.cont.length ? "Continúa: " + x.cont.map(c => c.estacion).join(" · ") : "";
-    } else if (view === "llegadas") {
-      place = x.orig ? x.orig.estacion : "";
-      const d = dwell(x.e);
-      obs = d ? `Estaciona ${d} min` : "Parada breve";
-    } else {
-      place = `${x.a ? x.a.estacion : ""} → ${x.b ? x.b.estacion : ""}`;
-      obs = "Sin parada";
-    }
-    return `<tr class="${view === "pasos" ? "paso" : ""}"><td class="t">${fmt(x.at)}</td><td class="dest">${place}</td>
-      <td>${badge(x.t)}</td><td>${x.t.numero}</td><td class="via">${via}</td><td class="obs" title="${obs}">${obs}</td></tr>`;
-  }).join("") : `<tr class="empty"><td colspan="6">Ningún tren ${view === "pasos" ? "pasa sin parar" : view === "salidas" ? "sale" : "llega"} por esta estación</td></tr>`;
-  renderTrain(now);
+function closeItinerary(){
+  $("modal").classList.remove("open");
+  if (lastFocus) lastFocus.focus();
 }
-
-function renderTrain(now) {
-  const t = DATA.trenes.find(x => x.numero === trainSel);
-  if (!t) { $("#it").innerHTML = ""; return; }
-  // start the itinerary at the event the train is at, or heading to, now
-  const ev = t.eventos;
-  let start = 0, best = Infinity;
-  ev.forEach((e, i) => { const d = nextAt(e.arr, now) - now; if (d < best) { best = d; start = i; } });
-  const seq = ev.slice(start).concat(ev.slice(0, start));
-  let clock = now;
-  const lines = seq.map(e => {
-    const arr = nextAt(e.arr, clock); clock = arr;
-    const dep = e.tipo === "paso" ? arr : arr + dwell(e); clock = dep;
-    return `<tr class="${e.tipo === "paso" ? "pas" : ""}"><td>${e.estacion}</td>
-      <td>${e.tipo === "paso" ? "" : fmt(arr)}</td><td>${e.tipo === "paso" ? fmt(arr) : ""}</td>
-      <td>${e.tipo === "paso" ? "" : fmt(dep)}</td><td>${e.via || ""}</td>
-      <td>${e.tipo === "paso" ? "Paso" : (dwell(e) ? dwell(e) + " min" : "breve")}</td></tr>`;
-  }).join("");
-  $("#it").innerHTML = `<h2>${badge(t)} ${t.numero} · ${t.recorrido}</h2>
-    <p class="note">${t.vmax} km/h · longitud máxima ${t.long_max_mm} mm · ciclo de ${CYCLE} min a partir de ahora</p>
-    <table><thead><tr><th>Estación<small>STATION</small></th><th>Llega<small>ARR</small></th><th>Pasa<small>PASS</small></th>
-    <th>Sale<small>DEP</small></th><th>Vía<small>TRACK</small></th><th>Parada<small>STOP</small></th></tr></thead>
-    <tbody>${lines}</tbody></table>`;
-}
-
-// controls
-const used = new Set(DATA.trenes.flatMap(t => t.eventos.map(e => e.estacion)));
-$("#est").innerHTML = DATA.estaciones.filter(s => used.has(s)).map(s => `<option>${s}</option>`).join("");
-$("#est").value = "Lora del Río";
-$("#est").onchange = render;
-document.querySelectorAll(".tab").forEach(b => b.onclick = () => { view = b.dataset.v; render(); });
-$("#hora").onchange = e => { const [h, m] = e.target.value.split(":").map(Number); sim = isNaN(h) ? null : h * 60 + m; render(); };
-$("#ahora").onclick = () => { sim = null; $("#hora").value = ""; render(); };
-$("#legend").innerHTML = DATA.trenes.map(t => `<div class="leg" data-n="${t.numero}">
-  <b class="n" style="background:${t.color};color:${textColor(t.color)}">${t.numero}</b>
-  <span><b>${t.tipo}</b> ${t.recorrido} · ${t.vmax} km/h · ${t.long_max_mm} mm</span></div>`).join("");
-document.querySelectorAll(".leg").forEach(l => l.onclick = () => {
-  trainSel = Number(l.dataset.n); render(); $("#it").scrollIntoView({ behavior: "smooth" });
+$("modal-close").onclick = closeItinerary;
+$("modal").addEventListener("click", e => { if (e.target === $("modal")) closeItinerary(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("modal").classList.contains("open")) closeItinerary(); });
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-train]");
+  if (b) openItinerary(Number(b.dataset.train));
 });
-// optional URL parameters: ?est=Dos%20Hermanas&vista=llegadas&hora=09:30&tren=52
+
+// ---- wiring -------------------------------------------------------------------
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => setMode(b.dataset.mode));
+sel.onchange = () => { try { localStorage.setItem(KEY, sel.value); } catch (e) {} render(); };
+$("manual").oninput = render;
+$("now").onclick = () => { $("manual").value = ""; render(); };
+$("foot-name").textContent = DATA.encuentro;
+$("foot-cycle").textContent = CYCLE;
+if (DATA.logo){ $("logo").hidden = false; $("logo").innerHTML = `<img src="${DATA.logo}" alt="Logo del encuentro">`; }
+$("legend").innerHTML = DATA.trenes.map(t =>
+  `<button type="button" data-train="${t.numero}"><span class="sw" style="background:${t.color};color:${textOn(t.color)}">${t.numero}</span><b>${t.tipo}</b> <span>${t.recorrido}${t.vmax ? " · " + t.vmax + " km/h" : ""}${t.long_max_mm ? " · " + t.long_max_mm + " mm" : ""}</span></button>`
+).join("");
+
+// Optional URL parameters: ?est=Dos%20Hermanas&vista=lle&hora=09:30&tren=52
 const q = new URLSearchParams(location.search);
-if (q.get("est")) $("#est").value = q.get("est");
-if (["salidas", "llegadas", "pasos"].includes(q.get("vista"))) view = q.get("vista");
-if (/^\d\d:\d\d$/.test(q.get("hora") || "")) { $("#hora").value = q.get("hora"); const [h, m] = q.get("hora").split(":").map(Number); sim = h * 60 + m; }
-if (q.get("tren")) trainSel = Number(q.get("tren"));
-$("#note").innerHTML = `Malla <b>${DATA.encuentro}</b>: ciclo de ${CYCLE} minutos que se repite cada hora. ` +
-  `Horarios sacados de la malla gráfica; las vías son las de la leyenda.`;
-render();
-setInterval(() => { if (sim === null) render(); }, 15000);
+if (STATIONS.includes(q.get("est"))) sel.value = q.get("est");
+if (/^\d\d:\d\d$/.test(q.get("hora") || "")) $("manual").value = q.get("hora");
+setMode(["sal", "lle", "pas"].includes(q.get("vista")) ? q.get("vista") : "sal");
+if (q.get("tren")) openItinerary(Number(q.get("tren")));
+setInterval(() => { if (!$("modal").classList.contains("open")) render(); }, 15000);
 </script>
 </body>
 </html>
